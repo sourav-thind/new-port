@@ -4,6 +4,7 @@ import { useGLTF, useAnimations, useScroll, Html } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import gsap from 'gsap'
 import * as THREE from "three"
+import styles from './../styles/HtmlScreen.module.css'
 
 export function MainSetup(props) {
 
@@ -22,8 +23,7 @@ export function MainSetup(props) {
 
     actions["Cube.001Action"].reset().play().paused = true;
     console.log(iframeRef.position)
-    iframeRef.position.y -= window.scrollY;
-    console.log(group.current)
+
   }, [])
 
 
@@ -50,39 +50,50 @@ export function MainSetup(props) {
 
     actions["Cube.001Action"].time = THREE.MathUtils.lerp(actions["Cube.001Action"].time, actions["Cube.001Action"].getClip().duration * scroll.current, 0.05)
   })
-  useLayoutEffect(() => {
-    tl.current = gsap.timeline();
 
 
-    tl.current.to(
-      group.current.rotation, {
-      duration: 2,
-      z: -Math.PI,
+  {
+    useLayoutEffect(() => {
+      tl.current = gsap.timeline();
 
-    },
-      0
-    ),
+
       tl.current.to(
-        group.current.position, {
-        duration: 1.8,
-        z: +2.9,
-        x: -0.15,
-        y: -16.5,
+        group.current.rotation, {
+        duration: 2,
+        z: -Math.PI,
 
 
-      },)
-    iframeRef.position = group.current.position;
-  })
+      },
+        0
+      ),
+        // tl.current.to(
+        //   htmlRef.current.rotation, {
+        //   duration: 2,
+        //   z: -Math.PI,
+        // },
+        //   0
+        // ),
+        tl.current.to(
+          group.current.position, {
+          duration: 1.8,
+          z: +2.9,
+          x: -0.15,
+          y: -16.5,
+
+
+        },)
+      iframeRef.position = group.current.position;
+    })
+  }
 
   useFrame(() => {
     if (meshRef.current && htmlRef.current) {
-      // Get the world position of the mesh
       const worldPosition = new THREE.Vector3();
       meshRef.current.getWorldPosition(worldPosition);
       if (htmlRef.current.position) {
         htmlRef.current.position.set(worldPosition.x, worldPosition.y, worldPosition.z);
       }
-      else{
+      else {
         console.log("got ya")
       }
     }
@@ -162,11 +173,26 @@ export function MainSetup(props) {
             </group>
           </group>
           <group name="Empty001" position={[0.3, 0.3, 1.31]} rotation={[2.08, 1.06, -0.5]} scale={0.05} />
-          <group name="Cube001" position={[0.2, 0.36, 1.01]} rotation={[2.05, 1.04, 2.67]} scale={[0.11, 0.11, 0.05]} >
-            <mesh ref={meshRef} name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['case']} >
-              <Html name='Cube001_2'  ref={htmlRef} geometry={nodes.Cube001_2.geometry} transform wrapperclass="htmlScreen" distanceFactor="10">
-                <iframe ref={iframeRef} position={[htmlPosition.current.x, htmlPosition.current.y, htmlPosition.current.z
-          ]} src="https://protfolio-html.vercel.app/" />
+          <group ref={meshRef} name="Cube001" position={[0.2, 0.36, 1.01]} rotation={[2.05, 1.04, 2.67]} scale={[0.11, 0.11, 0.05]} >
+            <mesh name="Cube001_1" geometry={nodes.Cube001_1.geometry} material={materials['case']} >
+              <Html name='Cube001_2' ref={htmlRef}
+                geometry={nodes.Cube001_2.geometry}
+                transform
+                occlude
+                position={[0, 0, -1]}  
+                rotation={[0, Math.PI, Math.PI]}
+                style={{
+                  width: '512px',
+                  height: '620px',
+                  top: 0,
+                  left: 0
+                }}
+                distanceFactor={4}
+              >
+                <iframe ref={iframeRef}
+                  src="https://protfolio-html.vercel.app/"
+                  style={{ width: '1024px', height: '670px', border: 'none' }}
+                />
               </Html>
             </mesh>
             <mesh name="Cube001_3" geometry={nodes.Cube001_3.geometry} material={materials.bezel} />

@@ -24,9 +24,9 @@ const MainCanvas = () => {
         <pointLight intensity={1} color={0xffffff} decay={2}/>
              <ScrollControls pages={3} >
                 <MainSetup/>
-        {/* <Html transform occlude    style={{
+        {/* <Html transform  style={{
           border: 'none', pointerEvents: 'none', }} distanceFactor={7}>
-          <iframe  src="https://protfolio-html.vercel.app/"  style={{ width: '1024px', height: '670px', position: 'sticky', border: 'none',
+          <iframe  src="https://protfolio-html.vercel.app/"  style={{ width: '1024px', height: '670px', border: 'none',
         pointerEvents: 'none', }}/></Html> */}
         </ScrollControls>
          
