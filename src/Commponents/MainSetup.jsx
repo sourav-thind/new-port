@@ -17,7 +17,7 @@ export function MainSetup(props) {
   const scroll = useScroll();
   const { actions } = useAnimations(animations, group);
   const htmlPosition = useRef(new THREE.Vector3());
-
+  var positionY=null;
 
   useEffect(() => {
 
@@ -25,23 +25,6 @@ export function MainSetup(props) {
     console.log(iframeRef.position)
 
   }, [])
-
-
-
-
-  const [scrollProgress, setScrollProgress] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      const documentHeight = document.body.scrollHeight - window.innerHeight;
-      const progress = scrollTop / documentHeight;
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
 
 
@@ -55,7 +38,7 @@ export function MainSetup(props) {
   {
     useLayoutEffect(() => {
       tl.current = gsap.timeline();
-
+       positionY = group.current.position.y
 
       tl.current.to(
         group.current.rotation, {
@@ -82,22 +65,8 @@ export function MainSetup(props) {
 
 
         },)
-      iframeRef.position = group.current.position;
     })
   }
-
-  useFrame(() => {
-    if (meshRef.current && htmlRef.current) {
-      const worldPosition = new THREE.Vector3();
-      meshRef.current.getWorldPosition(worldPosition);
-      if (htmlRef.current.position) {
-        htmlRef.current.position.set(worldPosition.x, worldPosition.y, worldPosition.z);
-      }
-      else {
-        console.log("got ya")
-      }
-    }
-  });
 
   return (
     < >
@@ -179,7 +148,7 @@ export function MainSetup(props) {
                 geometry={nodes.Cube001_2.geometry}
                 transform
                 occlude
-                position={[0, 0, -1]}  
+                position={[0, positionY, -1]}  
                 rotation={[0, Math.PI, Math.PI]}
                 style={{
                   width: '512px',
